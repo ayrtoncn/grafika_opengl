@@ -13,14 +13,14 @@ GLfloat INIT_X_BEGIN = 0.0;
 GLfloat INIT_X_END = 13.0;
 GLfloat INIT_Y = 0.0;
 GLfloat CAR_LENGTH = 2.0;
-GLfloat xRef = 0.0;
+GLfloat xRef = INIT_X_BEGIN - CAR_LENGTH;
 GLfloat yRef = 0.0;
 
-void drawCircle(GLfloat x, GLfloat y, GLfloat radius);
+void RenderWheel(GLfloat x, GLfloat y, GLfloat radius);
 void RenderCar(GLfloat x, GLfloat y, GLfloat z);
-void moveCar();
+void MoveCar();
 
-void drawCircle(GLfloat x, GLfloat y, GLfloat radius) {
+void RenderWheel(GLfloat x, GLfloat y, GLfloat radius) {
 	int i;
 	int triangleAmount = 1000; 
 	GLfloat twicePi = 2.0f * PI;
@@ -34,6 +34,16 @@ void drawCircle(GLfloat x, GLfloat y, GLfloat radius) {
 		glVertex2f(x, y);
 		glColor3f(0.20f, 0.20f, 0.20f);
 		glVertex2f(x + (radius * cos(i * twicePi / triangleAmount)), y + (radius * sin(i * twicePi / triangleAmount)));
+	}
+	glEnd();
+
+	glBegin(GL_LINES);
+	for(i = 0; i <= triangleAmount; i++) {
+		if (i % 250 == 0) {
+			glColor3f(1.0f, 1.0f, 1.0f);
+			glVertex2f(x, y);
+			glVertex2f(x + ((radius/2) * cos(i * twicePi / triangleAmount)), y + ((radius/2) * sin(i * twicePi / triangleAmount)));
+		}
 	}
 	glEnd();
 }
@@ -70,15 +80,9 @@ void RenderCar(GLfloat x, GLfloat y, GLfloat z) {
 	glVertex3f(x + 0.85, 0.95, 0.1); 
 	glVertex3f(x + 0.15, 0.95, 0.1); 
 	glEnd(); 
-
-	// front wheel
-	drawCircle(x + 1.6, 0.0, 0.25);
-
-	// front wheel
-	drawCircle(x + 0.4, 0.0, 0.25);
 } 
 
-void moveCar() {
+void MoveCar() {
 	if (xRef > INIT_X_END + CAR_LENGTH) {
 		xRef = INIT_X_BEGIN - CAR_LENGTH;
 	} else {
@@ -87,14 +91,22 @@ void moveCar() {
 }
 
 void RenderAll() { 
+	// car body
 	RenderCar(xRef, yRef, 0.0);
+
+	// front wheel
+	RenderWheel(xRef + 1.6, yRef, 0.25);
+
+	// front wheel
+	RenderWheel(xRef + 0.4, yRef, 0.25);
+
 	glFlush(); 
-	moveCar();
+	MoveCar();
 	glutPostRedisplay(); // enables animation by rendering changed position of objects
 } 
 
 void InitializeDisplay() { 
-	glClearColor(0.0, 0.0, 0.0, 1.0); // sets background to white with opacity of 1.0 
+	glClearColor(1.0, 1.0, 1.0, 1.0); // sets background to white with opacity of 1.0 
 	glMatrixMode(GL_PROJECTION); 
 	glLoadIdentity(); 
 	glOrtho(INIT_X_BEGIN, INIT_X_END, -0.5, 1.2, -1.0, 1.0); 
