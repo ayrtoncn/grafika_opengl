@@ -22,7 +22,6 @@ GLfloat wheelRotation = -0.1;
 int TRIANGLE_AMOUNT = 1000;
 
 void RotateWheel(GLfloat* data, int size, GLfloat x, GLfloat y) {
-	// wheelRotation += 0.1;
 	for (int i = 0; i < size; i++) {
 		GLfloat old_x = data[3 * i] - x;
 		GLfloat old_y = data[3 * i + 1] - y;
@@ -32,9 +31,6 @@ void RotateWheel(GLfloat* data, int size, GLfloat x, GLfloat y) {
 }
 
 void generateCircleArray(GLfloat* result, GLfloat x, GLfloat y, GLfloat z, GLfloat radius) {
-	// data = new GLfloat[9 * TRIANGLE_AMOUNT];
-	// static GLfloat* result = new GLfloat[9 * TRIANGLE_AMOUNT];
-	// printf("SIZE %ld\n", sizeof(data));
 	for (int i = 0; i < TRIANGLE_AMOUNT; i++) {
 		result[9*i] = x;
 		result[9*i + 1] = y;
@@ -46,7 +42,6 @@ void generateCircleArray(GLfloat* result, GLfloat x, GLfloat y, GLfloat z, GLflo
 		result[9*i + 7] = y + radius * sin((i + 1) * 2 * PI / TRIANGLE_AMOUNT);
 		result[9*i + 8] = z;
 	}
-	// return result;
 }
 
 int main( void )
@@ -170,8 +165,6 @@ int main( void )
 	back_wheel_buffer_data = new GLfloat[9 * TRIANGLE_AMOUNT];
 	generateCircleArray(front_wheel_buffer_data, 0.4, 0.0, 0.0, 0.25);
 	generateCircleArray(back_wheel_buffer_data, -0.45, 0.0, 0.0, 0.25);
-	// front_wheel_buffer_data = generateCircleArray(0.4, 0.0, 0.0, 0.2);
-	// back_wheel_buffer_data = generateCircleArray(0.4, 0.0, 0.0, 0.2);
 
 	GLuint vertexbuffer;
 	glGenBuffers(1, &vertexbuffer);
@@ -198,7 +191,7 @@ int main( void )
 		glEnableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(car_body_vertex_buffer_data), car_body_vertex_buffer_data, GL_STATIC_DRAW);
-		glDrawArrays(GL_TRIANGLES, 0, 12); // 3 indices starting at 0 -> 1 triangle
+		glDrawArrays(GL_TRIANGLES, 0, 12);
 
 		// Use window shader
 		glUseProgram(windowProgram);
@@ -207,7 +200,7 @@ int main( void )
 		glEnableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(window_vertex_buffer_data), window_vertex_buffer_data, GL_STATIC_DRAW);
-		glDrawArrays(GL_TRIANGLES, 0, 12); // 3 indices starting at 0 -> 1 triangle
+		glDrawArrays(GL_TRIANGLES, 0, 12);
 
 		// Use wheel shader
 		glUseProgram(wheelProgram);
