@@ -15,6 +15,7 @@ GLfloat INIT_Y = 0.0;
 GLfloat CAR_LENGTH = 2.0;
 GLfloat xRef = INIT_X_BEGIN - CAR_LENGTH;
 GLfloat yRef = 0.0;
+GLfloat wheelRotation = 0.0;
 
 void RenderWheel(GLfloat x, GLfloat y, GLfloat radius);
 void RenderCar(GLfloat x, GLfloat y, GLfloat z);
@@ -36,16 +37,32 @@ void RenderWheel(GLfloat x, GLfloat y, GLfloat radius) {
 		glVertex2f(x + (radius * cos(i * twicePi / triangleAmount)), y + (radius * sin(i * twicePi / triangleAmount)));
 	}
 	glEnd();
+	// glMatrixMode(GL_MODELVIEW);
+	// double* modelviewMatrix;
+	// glGetDoublev (GL_MODELVIEW_MATRIX, modelviewMatrix);
 
+	// GLfloat now_x = modelviewMatrix[12];
+	// GLfloat now_y = modelviewMatrix[13];
+	// GLfloat now_z = modelviewMatrix[14];
+	// glTranslatef(-x, -y, 0);
+	glTranslatef(x, y, 0);
+	glRotatef(wheelRotation, 0, 0, 1);
+	glTranslatef(-x, -y, 0);
 	glBegin(GL_LINES);
+	// this one for rotation
 	for(i = 0; i <= triangleAmount; i++) {
 		if (i % 250 == 0) {
-			glColor3f(1.0f, 1.0f, 1.0f);
+			// glColor3f(1.0f, 1.0f, 1.0f);
+			glColor3f(1.0f, 0.0f, 0.0f);
 			glVertex2f(x, y);
 			glVertex2f(x + ((radius/2) * cos(i * twicePi / triangleAmount)), y + ((radius/2) * sin(i * twicePi / triangleAmount)));
 		}
 	}
 	glEnd();
+	glTranslatef(x, y, 0);
+	glRotatef(-wheelRotation, 0, 0, 1);
+	glTranslatef(-x, -y, 0);
+	// glTranslatef(x, y, 0);
 }
 
 void RenderCar(GLfloat x, GLfloat y, GLfloat z) { 
@@ -90,6 +107,14 @@ void MoveCar() {
 	}
 }
 
+// void RotateWheel() {
+// 	wheelRotation = (wheelRotation + 249) % 250;
+// }
+
+void RotateWheel() {
+	wheelRotation -= 0.1;
+}
+
 void RenderAll() { 
 	// car body
 	RenderCar(xRef, yRef, 0.0);
@@ -97,10 +122,11 @@ void RenderAll() {
 	// front wheel
 	RenderWheel(xRef + 1.6, yRef, 0.25);
 
-	// front wheel
+	// back wheel
 	RenderWheel(xRef + 0.4, yRef, 0.25);
 
-	glFlush(); 
+	glFlush();
+	RotateWheel();
 	MoveCar();
 	glutPostRedisplay(); // enables animation by rendering changed position of objects
 } 
