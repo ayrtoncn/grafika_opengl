@@ -1,0 +1,12 @@
+#version 330 core
+
+// Ouput data
+out vec3 color;
+
+void main()
+{
+
+	// Output color = brown 
+	color = vec3(0.071f, 0.427f, 0.157f);
+
+}

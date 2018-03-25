@@ -70,7 +70,24 @@ target_link_libraries(tugas_2_1
 # Xcode and Visual working directories
 set_target_properties(tugas_2_1 PROPERTIES XCODE_ATTRIBUTE_CONFIGURATION_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/minggu_2/tugas1")
 create_target_launcher(tugas_2_1 WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/minggu_2/tugas1")
-create_default_target_launcher(tugas_2_1 WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/minggu_2/tugas1") # tut 1 is not the default or people would complain that tut 2 doesn't work
+create_default_target_launcher(tugas_2_1 WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/minggu_2/tugas1")
+
+## Tugas 2
+add_executable(tugas_2_2
+	minggu_2/tugas2/tugas_2.cpp
+	common/shader.cpp
+	common/shader.hpp
+	
+	minggu_2/tugas2/SimpleFragmentShader.fragmentshader
+	minggu_2/tugas2/SimpleVertexShader.vertexshader
+)
+target_link_libraries(tugas_2_2
+	${ALL_LIBS}
+)
+# Xcode and Visual working directories
+set_target_properties(tugas_2_2 PROPERTIES XCODE_ATTRIBUTE_CONFIGURATION_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/minggu_2/tugas2")
+create_target_launcher(tugas_2_2 WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/minggu_2/tugas2")
+create_default_target_launcher(tugas_2_2 WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/minggu_2/tugas2")
 
 SOURCE_GROUP(common REGULAR_EXPRESSION ".*/common/.*" )
 SOURCE_GROUP(shaders REGULAR_EXPRESSION ".*/.*shader$" )
@@ -78,8 +95,8 @@ SOURCE_GROUP(shaders REGULAR_EXPRESSION ".*/.*shader$" )
 if (NOT ${CMAKE_GENERATOR} MATCHES "Xcode" )
 # Our Code
 add_custom_command(
-   TARGET tugas_2_1 POST_BUILD
-   COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/tugas_2_1${CMAKE_EXECUTABLE_SUFFIX}" "${CMAKE_CURRENT_SOURCE_DIR}/minggu_2/tugas1/"
+   TARGET tugas_2_2 POST_BUILD
+   COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/tugas_2_2${CMAKE_EXECUTABLE_SUFFIX}" "${CMAKE_CURRENT_SOURCE_DIR}/minggu_2/tugas2/"
 )
 #
 
