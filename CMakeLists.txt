@@ -78,8 +78,14 @@ add_executable(tugas_2_2
 	common/shader.cpp
 	common/shader.hpp
 	
-	minggu_2/tugas2/SimpleFragmentShader.fragmentshader
-	minggu_2/tugas2/SimpleVertexShader.vertexshader
+	minggu_2/tugas2/CarFragmentShader.fragmentshader
+	minggu_2/tugas2/CarVertexShader.vertexshader
+	minggu_2/tugas2/CrossFragmentShader.fragmentshader
+	minggu_2/tugas2/CrossVertexShader.vertexshader
+	minggu_2/tugas2/WheelFragmentShader.fragmentshader
+	minggu_2/tugas2/WheelVertexShader.vertexshader
+	minggu_2/tugas2/WindowFragmentShader.fragmentshader
+	minggu_2/tugas2/WindowVertexShader.vertexshader
 )
 target_link_libraries(tugas_2_2
 	${ALL_LIBS}
@@ -89,14 +95,35 @@ set_target_properties(tugas_2_2 PROPERTIES XCODE_ATTRIBUTE_CONFIGURATION_BUILD_D
 create_target_launcher(tugas_2_2 WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/minggu_2/tugas2")
 create_default_target_launcher(tugas_2_2 WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/minggu_2/tugas2")
 
+# Tugas minggu 3
+## Tugas 1
+add_executable(tugas_3_1
+	minggu_3/tugas1/tugas_1.cpp
+)
+target_link_libraries(tugas_3_1
+	${ALL_LIBS}
+)
+# Xcode and Visual working directories
+set_target_properties(tugas_3_1 PROPERTIES XCODE_ATTRIBUTE_CONFIGURATION_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/minggu_3/tugas1")
+create_target_launcher(tugas_3_1 WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/minggu_3/tugas1")
+create_default_target_launcher(tugas_3_1 WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/minggu_3/tugas1")
+
 SOURCE_GROUP(common REGULAR_EXPRESSION ".*/common/.*" )
 SOURCE_GROUP(shaders REGULAR_EXPRESSION ".*/.*shader$" )
 
 if (NOT ${CMAKE_GENERATOR} MATCHES "Xcode" )
 # Our Code
 add_custom_command(
+   TARGET tugas_2_1 POST_BUILD
+   COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/tugas_2_1${CMAKE_EXECUTABLE_SUFFIX}" "${CMAKE_CURRENT_SOURCE_DIR}/minggu_2/tugas1/"
+)
+add_custom_command(
    TARGET tugas_2_2 POST_BUILD
    COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/tugas_2_2${CMAKE_EXECUTABLE_SUFFIX}" "${CMAKE_CURRENT_SOURCE_DIR}/minggu_2/tugas2/"
+)
+add_custom_command(
+   TARGET tugas_3_1 POST_BUILD
+   COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/tugas_3_1${CMAKE_EXECUTABLE_SUFFIX}" "${CMAKE_CURRENT_SOURCE_DIR}/minggu_3/tugas1/"
 )
 #
 

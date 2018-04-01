@@ -88,7 +88,7 @@ void RenderCar(GLfloat x, GLfloat y, GLfloat z) {
 	glVertex3f(x + 0.85, 0.95, 0.1); 
 	glVertex3f(x + 0.15, 0.95, 0.1); 
 	glEnd(); 
-} 
+}
 
 void MoveCar() {
 	if (xRef > INIT_X_END + CAR_LENGTH) {
