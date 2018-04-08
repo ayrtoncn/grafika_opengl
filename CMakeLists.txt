@@ -49,6 +49,7 @@ set(ALL_LIBS
 	-lGL
 	-lGLU
 	-lglut
+	-lIL
 )
 
 add_definitions(
@@ -108,6 +109,25 @@ set_target_properties(tugas_3_1 PROPERTIES XCODE_ATTRIBUTE_CONFIGURATION_BUILD_D
 create_target_launcher(tugas_3_1 WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/minggu_3/tugas1")
 create_default_target_launcher(tugas_3_1 WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/minggu_3/tugas1")
 
+# Tugas minggu 4
+## Tugas 1
+add_executable(tugas_4_1
+	minggu_4/tugas1/tugas_1.cpp
+	common/shader.cpp
+	common/shader.hpp
+	common/texture.cpp
+	common/texture.hpp
+	common/control4.cpp
+	common/control4.hpp
+)
+target_link_libraries(tugas_4_1
+	${ALL_LIBS}
+)
+# Xcode and Visual working directories
+set_target_properties(tugas_4_1 PROPERTIES XCODE_ATTRIBUTE_CONFIGURATION_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/minggu_4/tugas1")
+create_target_launcher(tugas_4_1 WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/minggu_4/tugas1")
+create_default_target_launcher(tugas_4_1 WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/minggu_4/tugas1")
+
 SOURCE_GROUP(common REGULAR_EXPRESSION ".*/common/.*" )
 SOURCE_GROUP(shaders REGULAR_EXPRESSION ".*/.*shader$" )
 
@@ -124,6 +144,10 @@ add_custom_command(
 add_custom_command(
    TARGET tugas_3_1 POST_BUILD
    COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/tugas_3_1${CMAKE_EXECUTABLE_SUFFIX}" "${CMAKE_CURRENT_SOURCE_DIR}/minggu_3/tugas1/"
+)
+add_custom_command(
+   TARGET tugas_4_1 POST_BUILD
+   COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/tugas_4_1${CMAKE_EXECUTABLE_SUFFIX}" "${CMAKE_CURRENT_SOURCE_DIR}/minggu_4/tugas1/"
 )
 #
 
