@@ -87,6 +87,18 @@ void computeMatricesFromInputs(GLfloat *angle){
 	mat4 mat;
 	float rotationSpeed = 0.1;
 
+	if (xpos > 512) {
+		mat = rotationMatrix(vec3(0, 1, 0), rotationSpeed);
+	} else if (xpos < 512) {
+		mat = rotationMatrix(vec3(0, 1, 0), -rotationSpeed);
+	}
+
+	if (ypos > 384) {
+		position.y += 0.1;
+	} else if (ypos < 384) {
+		position.y -= 0.1;
+	}
+
 	// Move forward
 	if (glfwGetKey( window, GLFW_KEY_UP ) == GLFW_PRESS){
 		position.y += 0.1;
