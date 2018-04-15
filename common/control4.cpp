@@ -12,12 +12,17 @@ using namespace glm;
 
 glm::mat4 ViewMatrix;
 glm::mat4 ProjectionMatrix;
+glm::vec3 ViewPosition;
 
 glm::mat4 getViewMatrix(){
 	return ViewMatrix;
 }
 glm::mat4 getProjectionMatrix(){
 	return ProjectionMatrix;
+}
+
+glm::vec3 getViewPosition() {
+	return ViewPosition;
 }
 
 
@@ -125,6 +130,7 @@ void computeMatricesFromInputs(GLfloat *angle){
 	}
 	vec4 something = mat * vec4(position, 0);
 	position = vec3(something);
+	ViewPosition = position;
 	// up = vec3(position.x * sin(*angle), 1, position.z * sin(*angle));
 	// up = vec3(0, cos(*angle), sin(*angle));
 	// up = glm::normalize(up);

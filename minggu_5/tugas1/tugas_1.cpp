@@ -23,6 +23,13 @@ float PI = 3.1415926f;
 int TRIANGLE_AMOUNT = 1000;
 GLfloat wheelRotation = -0.1;
 
+vec3 getNormal(vec3 vertex1, vec3 vertex2, vec3 vertex3) {
+	vec3 edge1 = vertex2 - vertex1;
+	vec3 edge2 = vertex3 - vertex1;
+	vec3 normalVector = normalize(cross(edge1, edge2));
+	return normalVector;
+}
+
 void RotateWheel(GLfloat* data, int size, GLfloat x, GLfloat y) {
 	for (int i = 0; i < size; i++) {
 		GLfloat old_x = data[3 * i] - x;
@@ -152,6 +159,7 @@ int main( void )
 
 	// Get a handle for our "MVP" uniform
 	GLuint MatrixID = glGetUniformLocation(programID, "MVP");
+	GLuint VecID = glGetUniformLocation(programID, "ViewPosition");
 
 	// Load the texture
 	// GLuint Texture = loadDDS("uvtemplate.DDS");
@@ -420,6 +428,46 @@ int main( void )
 	wheel_data = new GLfloat[12 * 9 * TRIANGLE_AMOUNT];
 	generateCircleArray(wheel_data, -0.2f, -0.75f, 0.0f, 0.2501f, -0.2501f, 0.1f);
 
+	GLfloat g_normal_buffer_data[sizeof(g_vertex_buffer_data) / sizeof(GLfloat)];
+
+	for (int i = 0; i < sizeof(indices) / sizeof(float) / 3; i++) {
+		GLuint indice1 = indices[3 * i];
+		GLuint indice2 = indices[3 * i + 1];
+		GLuint indice3 = indices[3 * i + 2];
+		// printf("indices %d")
+		vec3 vertex1 = vec3(g_vertex_buffer_data[3 * indice1], g_vertex_buffer_data[3 * indice1 + 1],
+			g_vertex_buffer_data[3 * indice1 + 2]);
+		vec3 vertex2 = vec3(g_vertex_buffer_data[3 * indice2], g_vertex_buffer_data[3 * indice2 + 1],
+			g_vertex_buffer_data[3 * indice2 + 2]);
+		vec3 vertex3 = vec3(g_vertex_buffer_data[3 * indice3], g_vertex_buffer_data[3 * indice3 + 1],
+			g_vertex_buffer_data[3 * indice3 + 2]);
+		vec3 normalVector = getNormal(vertex1, vertex2, vertex3);
+		g_normal_buffer_data[3 * indice1] = normalVector.x;
+		g_normal_buffer_data[3 * indice2] = normalVector.x;
+		g_normal_buffer_data[3 * indice3] = normalVector.x;
+		g_normal_buffer_data[3 * indice1 + 1] = normalVector.y;
+		g_normal_buffer_data[3 * indice2 + 1] = normalVector.y;
+		g_normal_buffer_data[3 * indice3 + 1] = normalVector.y;
+		g_normal_buffer_data[3 * indice1 + 2] = normalVector.z;
+		g_normal_buffer_data[3 * indice2 + 2] = normalVector.z;
+		g_normal_buffer_data[3 * indice3 + 2] = normalVector.z;
+	}
+
+	for (int i = 0; i < 36; i++) {
+		printf("normal %d - %f, %f, %f\n", i, g_normal_buffer_data[3 * i],
+			g_normal_buffer_data[3 * i + 1], g_normal_buffer_data[3 * i + 2]);
+	}
+
+	GLfloat g_wheel_normal_buffer_data[sizeof(wheel_data) / sizeof(GLfloat)];
+	for (int i = 0; i < sizeof(wheel_data) / sizeof(GLfloat) / 3; i++) {
+		g_wheel_normal_buffer_data[3 * i] = 0.0f;
+		g_wheel_normal_buffer_data[3 * i + 1] = 0.0f;
+		if (wheel_data[3 * i + 2 > 0]) {
+			g_wheel_normal_buffer_data[3 * i + 2] = 1.0f;
+		} else
+			g_wheel_normal_buffer_data[3 * i + 2] = -1.0f;
+	}
+
 	GLuint vertexbuffer;
 	glGenBuffers(1, &vertexbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
@@ -429,6 +477,11 @@ int main( void )
 	glGenBuffers(1, &uvbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(g_uv_buffer_data), g_uv_buffer_data, GL_STATIC_DRAW);
+
+	GLuint normalbuffer;
+	glGenBuffers(1, &normalbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(g_normal_buffer_data), g_normal_buffer_data, GL_STATIC_DRAW);
 
 	GLuint ebobuffer;
 	glGenBuffers(1, &ebobuffer);
@@ -455,6 +508,7 @@ int main( void )
 		// Send our transformation to the currently bound shader, 
 		// in the "MVP" uniform
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+		glUniform3fv(VecID, 1, &getViewPosition()[0]);
 
 		// 1rst attribute buffer : vertices
 		glEnableVertexAttribArray(0);
@@ -480,12 +534,25 @@ int main( void )
 			(void*)0                          // array buffer offset
 		);
 
-		// Bind our texture in Texture Unit 0
+		// 3nd attribute buffer : Normal
+		glEnableVertexAttribArray(2);
+		glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
+		glVertexAttribPointer(
+			2,                                // attribute. No particular reason for 1, but must match the layout in the shader.
+			3,                                // size : U+V => 2
+			GL_FLOAT,                         // type
+			GL_FALSE,                         // normalized?
+			0,                                // stride
+			(void*)0                          // array buffer offset
+		);
+
+		// Bind our texture normal in Texture Unit 0
 		glActiveTexture(GL_TEXTURE0);
 		// Set our "myTextureSampler" sampler to use Texture Unit 0
 		// glUniform1i(TextureID, 0);
 
 		// Draw the triangle !
+
 		// side
 		glBindTexture(GL_TEXTURE_2D, sideTexture);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, 24 * sizeof(GLuint), indices, GL_STATIC_DRAW);
@@ -538,10 +605,12 @@ int main( void )
 		);
 
 		// wheel
+
 		glBindTexture(GL_TEXTURE_2D, tireTexture);
 		glBufferData(GL_ARRAY_BUFFER, 12 * 9 * TRIANGLE_AMOUNT * sizeof(GLfloat), wheel_data , GL_STATIC_DRAW);
 		glDrawArrays(GL_TRIANGLES, 0, 12 * 9 * TRIANGLE_AMOUNT);
 
+/*
 		// Back wheel cross
 		glBindTexture(GL_TEXTURE_2D, rimTexture);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
@@ -552,7 +621,8 @@ int main( void )
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(front_cross_buffer_data), front_cross_buffer_data, GL_STATIC_DRAW);
 		glDrawArrays(GL_TRIANGLES, 0, 48);
-
+*/
+		glDisableVertexAttribArray(2);
 		glDisableVertexAttribArray(1);
 		glDisableVertexAttribArray(0);
 
@@ -566,6 +636,7 @@ int main( void )
 
 	// Cleanup VBO and shader
 	glDeleteBuffers(1, &vertexbuffer);
+	glDeleteBuffers(1, &normalbuffer);
 	glDeleteBuffers(1, &uvbuffer);
 	glDeleteProgram(programID);
 	glDeleteTextures(1, &TextureID);
