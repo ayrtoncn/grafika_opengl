@@ -281,7 +281,7 @@ int main( void )
 	GLuint rimTexture = loadBMP_custom("rim.bmp");
 
 	// this one is for land
-	// GLuint landTexture = loadBMP_custom("land.bmp");
+	GLuint landTexture = loadBMP_custom("land.bmp");
 	
 	// Get a handle for our "myTextureSampler" uniform
 	GLuint TextureID  = glGetUniformLocation(programID, "myTextureSampler");
@@ -1128,7 +1128,7 @@ int main( void )
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		// land
-		glBindTexture(GL_TEXTURE_2D, frontCarTexture); // TODO: change this to landTexture
+		glBindTexture(GL_TEXTURE_2D, landTexture); // TODO: change this to landTexture
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(GLuint), indices + 60, GL_STATIC_DRAW);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
