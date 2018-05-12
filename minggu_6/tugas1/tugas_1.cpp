@@ -334,10 +334,10 @@ int main( void )
 		-0.05f, 0.25f, -0.25f,
 		-0.05f, 0.25f, 0.25f,
 		// land
-		500.0f, -0.1f, 500.0f,
-		500.0f, -0.1f, -500.0f,
-		-500.0f, -0.1f, -500.0f,
-		-500.0f, -0.1f, 500.0f,
+		100.0f, -0.1f, 100.0f,
+		100.0f, -0.1f, -100.0f,
+		-100.0f, -0.1f, -100.0f,
+		-100.0f, -0.1f, 100.0f,
 	};
 
 	// Two UV coordinatesfor each vertex. They were created with Blender.
