@@ -31,7 +31,7 @@ void main(){
 
 	// ambient lighting
 	float ambientStrength = 0.4f;
-	vec3 ambient = ambientStrength * vec3(0.0f, 1.0f, 0.0f);
+	vec3 ambient = ambientStrength * vec3(1.0f, 1.0f, 1.0f);
 
 	// get normalized normal vector
 	vec3 norm = normalize(Normal);
