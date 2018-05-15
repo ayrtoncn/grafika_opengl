@@ -788,7 +788,7 @@ int main( void )
 				if (p.life > 0.0f){
 
 					// Simulate simple physics : gravity only, no collisions
-					p.speed += glm::vec3(0.0f,-9.81f, 0.0f) * (float)delta * 0.5f * 0.5f;
+					p.speed += glm::vec3(0.0f,-9.81f, 0.0f) * (float)delta * 0.5f * 0.65f;
 
 					// check collision
 					CubeCollider thisCollider;
