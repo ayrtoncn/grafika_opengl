@@ -699,7 +699,7 @@ int main( void )
 		}
 		smokeStartPos += carMovement;
 
-		for (int i = 0; i < sizeof(g_vertex_buffer_data) / sizeof(GLfloat) / 3; i++) {
+		for (int i = 0; i + 4 < sizeof(g_vertex_buffer_data) / sizeof(GLfloat) / 3; i++) {
 			g_vertex_buffer_data[3 * i] += carMovement;
 		}
 
