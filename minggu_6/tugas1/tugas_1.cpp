@@ -788,29 +788,42 @@ int main( void )
 				if (p.life > 0.0f){
 
 					// Simulate simple physics : gravity only, no collisions
-					p.speed += glm::vec3(0.0f,-9.81f, 0.0f) * (float)delta * 0.5f;
-					p.pos += p.speed * (float)delta;
-					p.cameradistance = glm::length( p.pos - CameraPosition );
-					//ParticlesContainer[i].pos += glm::vec3(0.0f,10.0f, 0.0f) * (float)delta;
+					p.speed += glm::vec3(0.0f,-9.81f, 0.0f) * (float)delta * 0.5f * 0.5f;
 
-					// Fill the GPU buffer
-					g_particule_position_size_data[4*ParticlesCount+0] = p.pos.x;
-					g_particule_position_size_data[4*ParticlesCount+1] = p.pos.y;
-					g_particule_position_size_data[4*ParticlesCount+2] = p.pos.z;
-												   
-					g_particule_position_size_data[4*ParticlesCount+3] = p.size;
-												   
-					g_particule_color_data[4*ParticlesCount+0] = p.r;
-					g_particule_color_data[4*ParticlesCount+1] = p.g;
-					g_particule_color_data[4*ParticlesCount+2] = p.b;
-					g_particule_color_data[4*ParticlesCount+3] = p.a;
-
+					// check collision
 					CubeCollider thisCollider;
-					thisCollider.maxPos = p.pos + vec3(0.35f, 0.4f, 0.0f);
-					thisCollider.minPos = p.pos + vec3(-0.05f, -0.4f, 0.0f);
+					thisCollider.maxPos = p.pos + vec3(0.35f, 0.4f, 0.0f) + p.speed * (float)delta;
+					thisCollider.minPos = p.pos + vec3(-0.05f, -0.4f, 0.0f) + p.speed * (float)delta;
 					if (checkCollision(landCollider, thisCollider)) {
 						p.life = -1;
+						p.cameradistance = -1.0f;
+						p.pos = vec3(1000.0f, 1000.0f, 1000.0f);
+					} else {
+
+						p.pos += p.speed * (float)delta;
+						p.cameradistance = glm::length( p.pos - CameraPosition );
+						//ParticlesContainer[i].pos += glm::vec3(0.0f,10.0f, 0.0f) * (float)delta;
+
+						// Fill the GPU buffer
+						g_particule_position_size_data[4*ParticlesCount+0] = p.pos.x;
+						g_particule_position_size_data[4*ParticlesCount+1] = p.pos.y;
+						g_particule_position_size_data[4*ParticlesCount+2] = p.pos.z;
+													   
+						g_particule_position_size_data[4*ParticlesCount+3] = p.size;
+													   
+						g_particule_color_data[4*ParticlesCount+0] = p.r;
+						g_particule_color_data[4*ParticlesCount+1] = p.g;
+						g_particule_color_data[4*ParticlesCount+2] = p.b;
+						g_particule_color_data[4*ParticlesCount+3] = p.a;
 					}
+					// CubeCollider thisCollider;
+					// thisCollider.maxPos = p.pos + vec3(0.35f, 0.4f, 0.0f);
+					// thisCollider.minPos = p.pos + vec3(-0.05f, -0.4f, 0.0f);
+					// if (checkCollision(landCollider, thisCollider)) {
+					// 	p.life = -1;
+					// 	p.cameradistance = -1.0f;
+					// 	p.pos = vec3(1000.0f, 1000.0f, 1000.0f);
+					// }
 
 				}else{
 					// Particles that just died will be put at the end of the buffer in SortParticles();
