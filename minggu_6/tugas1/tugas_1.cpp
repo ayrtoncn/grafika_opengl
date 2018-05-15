@@ -766,11 +766,9 @@ int main( void )
 				(rand()%2000 - 1000.0f)/1000.0f
 			);
 			
-			SmokeParticlesContainer[particleIndex].speed = 0.2f * (maindir + randomdir * spread);
+			SmokeParticlesContainer[smokeParticleIndex].speed = 0.2f * (maindir + randomdir * spread);
 
-
-			// Very bad way to generate a random color
-			SmokeParticlesContainer[particleIndex].size = 0.08f;
+			SmokeParticlesContainer[smokeParticleIndex].size = 0.08f;
 			
 		}
 
